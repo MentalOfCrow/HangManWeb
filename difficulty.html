@@ -1,0 +1,26 @@
+{{define "difficulty"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman</title>
+    <link rel="stylesheet" href="../static/style.css" type="text/css">
+</head>
+<body class="Page1"></body>
+    <div class="container">
+        <h1>Hangman - Choisissez votre niveau de difficulté</h1>
+        <form action="/init" method="post">
+            <label for="difficulty">Choisissez la difficulté :</label>
+            <select id="difficulty" name="difficulty">
+                <option value="TextAFacile">Facile</option>
+                <option value="TextBMoyen">Moyen</option>
+                <option value="TextCDifficile">Difficile</option>
+                <option value="TextDHalloween">Halloween</option>
+            </select>
+            <button type="submit">Commencer</button>
+        </form>
+    </div>
+</body>
+</html>
+{{end}} 
+
+{{template "difficulty" .}}
