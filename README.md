@@ -1,3 +1,25 @@
+Notre Strcuture de Projet : 
+/HANGMANWEBCOMPLET
+│
+├── /static
+│   ├── style.css
+│   └── images/
+│
+├── /templates
+│   ├── difficulty.html
+│   ├── index.html
+│   ├── lose.html
+│   ├── win.html
+├── /wordlists
+│   ├── TextAFacile.txt
+│   ├── TextBMoyen.txt
+│   ├── TextCDifficile.txt
+│   └── TextDHalloween.txt
+│
+├── main.go
+├── go.mod
+└── README.md
+
 Projet hangman : Vous devez mettre en place une IHM orienter web dans l’objectif de permettre à la majorité des
 utilisateurs de pouvoir utiliser votre jeu « Hangman CLI ». 
 
@@ -69,3 +91,4 @@ bien distribuées et sécurisées) Intégrer le module
 Hangman CLI
 Tester et valider
 (PS : Pour la disposition des fichiers : sous VsCode je peux pas avoir de fichiers exemple.gohtml par contre on peux exemple.html) 
+
