@@ -17,9 +17,8 @@ Notre Strcuture de Projet :
 |   ├── 1.png
 |   ├── 0.png
 |   ├── Background.png
-|   ├── WIN.png
+|   └── WIN.png
 |
-│
 ├── /templates
 │   ├── difficulty.html
 │   ├── index.html
