@@ -35,6 +35,8 @@ La Structure du Projet Sur VsCode Sera la suivant :
 ├── main.go
 └── README.md
 
+Notice Jeu :
+Pour Pouvoir Tester le HangMan Veuillez utilisée Seulement les MAJUSCULES pour les lettres !!!! ( Mises en Place Impossible de Mettre : 0 1 2 3 4 5 6 7 8 9 = Vous pouvez tester....
 
 
 Projet hangman : Vous devez mettre en place une IHM orienter web dans l’objectif de permettre à la majorité des
@@ -108,6 +110,7 @@ bien distribuées et sécurisées) Intégrer le module
 Hangman CLI
 Tester et valider
 (PS : Pour la disposition des fichiers : sous VsCode je peux pas avoir de fichiers exemple.gohtml par contre on peux exemple.html) 
+
 
 Important ! 
 
