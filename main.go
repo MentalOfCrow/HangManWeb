@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// Hangman représente l'état du jeu.
 type Hangman struct {
 	Message     string
 	Display     string
@@ -25,22 +26,13 @@ var hangman Hangman
 var isPlaying bool
 var win bool
 
-//	func NewGame(word string) Hangman {
-//		return Hangman{
-//			Message:     "Welcome back to Hangman!",
-//			Display:     updateDisplay("", word),
-//			LettersUsed: "",
-//			TriesLeft:   6,
-//			GameOver:    false,
-//			Word:        word,
-//		}
-//	}
+// NewGame initialise une nouvelle partie avec un mot aléatoire.
 func NewGame(wordList []string) Hangman {
 	rand.Seed(time.Now().UnixNano())
 	word := wordList[rand.Intn(len(wordList))]
 
 	return Hangman{
-		Message:     "Welcome back to Hangman!",
+		Message:     "Bienvenue dans le Pendu!",
 		Display:     strings.Repeat("_ ", len(word)),
 		LettersUsed: "",
 		TriesLeft:   10,
@@ -49,6 +41,8 @@ func NewGame(wordList []string) Hangman {
 		Gameswon:    0,
 	}
 }
+
+// verif vérifie l'état du jeu et renvoie "win", "lose" ou "guess again".
 func (game *Hangman) verif() string {
 	if game.TriesLeft < 1 {
 		return "lose"
@@ -58,6 +52,8 @@ func (game *Hangman) verif() string {
 		return "guess again"
 	}
 }
+
+// Guess traite la supposition du joueur et met à jour l'état du jeu en conséquence.
 func (game *Hangman) Guess(guess string) {
 	// Vérifier si la lettre a déjà été utilisée
 	if strings.Contains(game.LettersUsed, guess) {
@@ -71,10 +67,15 @@ func (game *Hangman) Guess(guess string) {
 		return
 	}
 
+	// Mettre à jour les lettres utilisées
 	game.LettersUsed += guess
+
+	// Mettre à jour l'affichage et les essais restants
 	if !game.updateDisplay([]rune(guess)[0]) {
 		game.TriesLeft--
 	}
+
+	// Vérifier l'état du jeu
 	game.GameOver = game.TriesLeft < 1
 
 	switch game.verif() {
@@ -92,10 +93,12 @@ func (game *Hangman) Guess(guess string) {
 	}
 }
 
+// isLetter vérifie si le caractère est une lettre.
 func isLetter(c byte) bool {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
+// updateDisplay met à jour l'affichage du mot masqué.
 func (game *Hangman) updateDisplay(char rune) bool {
 	var correct bool
 	arrayDisplay := []rune(game.Display)
@@ -109,6 +112,7 @@ func (game *Hangman) updateDisplay(char rune) bool {
 	return correct
 }
 
+// ReadWords lit les mots à partir d'un fichier.
 func ReadWords(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -127,17 +131,21 @@ func ReadWords(filename string) ([]string, error) {
 	return words, nil
 }
 
+// main est le point d'entrée du programme.
 func main() {
 	// Serve static files from the "static" directory.
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
+	// Page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.New("difficulty").ParseFiles("templates/difficulty.html"))
 		tmpl.Execute(w, nil)
 	})
+
+	// Initialisation du jeu
 	http.HandleFunc("/init", func(w http.ResponseWriter, r *http.Request) {
 		liste := r.FormValue("difficulty")
-		// Load word list from file
+		// Charger la liste de mots depuis le fichier
 		wordList, err := ReadWords("wordlists/" + liste + ".txt")
 		if err != nil {
 			log.Fatal(err)
@@ -146,15 +154,20 @@ func main() {
 		isPlaying = true
 		http.Redirect(w, r, "/hangman", 301)
 	})
+
+	// Page de défaite
 	http.HandleFunc("/lose", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.New("lose").ParseFiles("templates/lose.html"))
 		tmpl.ExecuteTemplate(w, "lose", hangman)
 	})
+
+	// Page de victoire
 	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.New("win").ParseFiles("templates/win.html"))
 		tmpl.ExecuteTemplate(w, "win", hangman)
 	})
-	// Start web server
+
+	// Page principale du jeu
 	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.New("index").ParseFiles("templates/index.html"))
 		if !isPlaying {
@@ -167,18 +180,13 @@ func main() {
 			}
 		}
 		tmpl.Execute(w, hangman)
-		//test
 	})
-	//	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//		tmpl := template.Must(template.ParseFiles("index.html"))
-	//		hangman := NewGame("hangman")
-	//		tmpl.Execute(w, hangman)
-	//	})
 
+	// Gestion de la devinette
 	http.HandleFunc("/guess", func(w http.ResponseWriter, r *http.Request) {
 		guess := r.FormValue("letter")
 		if len(guess) != 1 {
-			http.Error(w, "Please provide a letter.", http.StatusBadRequest)
+			http.Error(w, "Veuillez fournir une lettre.", http.StatusBadRequest)
 			return
 		}
 
@@ -187,5 +195,7 @@ func main() {
 		http.Redirect(w, r, "/hangman", http.StatusSeeOther)
 	})
 
+	// Démarrer le serveur web sur le port 8080
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
