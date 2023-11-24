@@ -1,3 +1,42 @@
+La Structure du Projet Sur VsCode Sera la suivant : 
+
+/HANGMANWEBCOMPLET
+│
+├── /static
+│   ├── style.css
+│   └── images/
+│   ├── 10.png
+│   ├── 9.png
+│   ├── 8.png
+│   ├── 7.png
+│   ├── 6.png
+│   ├── 5.png
+│   ├── 4.png
+│   ├── 3.png
+│   ├── 2.png
+│   ├── 1.png
+│   ├── 0.png
+│   ├── HangMan.jpg
+│   └── Win.jpg
+│
+├── /templates
+│   ├── difficulty.html
+│   ├── index.html
+│   ├── lose.html
+│   └── win.html
+│ 
+├── /wordlists
+│   ├── OptionADictionnaire.txt
+│   ├── OptionBFacile.txt
+│   ├── OptionCMoyen.txt
+│   ├── OptionDDifficile.txt
+│   └── OptionEHalloween.txt
+│
+├── main.go
+└── README.md
+
+
+
 Projet hangman : Vous devez mettre en place une IHM orienter web dans l’objectif de permettre à la majorité des
 utilisateurs de pouvoir utiliser votre jeu « Hangman CLI ». 
 
@@ -69,3 +108,8 @@ bien distribuées et sécurisées) Intégrer le module
 Hangman CLI
 Tester et valider
 (PS : Pour la disposition des fichiers : sous VsCode je peux pas avoir de fichiers exemple.gohtml par contre on peux exemple.html) 
+
+Important ! 
+
+Probleme de commit pour abdallah ( il avait casser son pc ) au niveau des commits on a faits 50% chaqu'un en terme de travaille . 
+
