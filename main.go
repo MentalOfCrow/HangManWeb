@@ -11,28 +11,28 @@ import (
 	"time"
 )
 
-// Hangman représente l'état du jeu.
+// Hangman représente l'état du jeu Hangman
 type Hangman struct {
-	Message     string
-	Display     string
-	LettersUsed string
-	TriesLeft   int
-	GameOver    bool
-	Word        string
-	Gameswon    int
+	Message     string // Message affiché à l'utilisateur
+	Display     string // Affichage du mot avec les lettres devinées et les espaces
+	LettersUsed string // Lettres déjà utilisées par le joueur
+	TriesLeft   int    // Nombre de tentatives restantes
+	GameOver    bool   // Indique si le jeu est terminé
+	Word        string // Mot à deviner
+	Gameswon    int    // Nombre de parties gagnées
 }
 
-var hangman Hangman
-var isPlaying bool
-var win bool
+var hangman Hangman // Variable pour suivre l'état du jeu actuel
+var isPlaying bool  // Indique si une partie est en cours
+var win bool        // Indique si le joueur a gagné la partie actuelle
 
-// NewGame initialise une nouvelle partie avec un mot aléatoire.
+// NewGame initialise une nouvelle partie Hangman
 func NewGame(wordList []string) Hangman {
 	rand.Seed(time.Now().UnixNano())
 	word := wordList[rand.Intn(len(wordList))]
 
 	return Hangman{
-		Message:     "Bienvenue dans le Pendu!",
+		Message:     "Bienvenue dans Hangman !",
 		Display:     strings.Repeat("_ ", len(word)),
 		LettersUsed: "",
 		TriesLeft:   10,
@@ -42,7 +42,7 @@ func NewGame(wordList []string) Hangman {
 	}
 }
 
-// verif vérifie l'état du jeu et renvoie "win", "lose" ou "guess again".
+// verif vérifie l'état actuel du jeu (gagné, perdu ou deviner à nouveau)
 func (game *Hangman) verif() string {
 	if game.TriesLeft < 1 {
 		return "lose"
@@ -53,7 +53,7 @@ func (game *Hangman) verif() string {
 	}
 }
 
-// Guess traite la supposition du joueur et met à jour l'état du jeu en conséquence.
+// Guess prend en charge la tentative du joueur pour deviner une lettre
 func (game *Hangman) Guess(guess string) {
 	// Vérifier si la lettre a déjà été utilisée
 	if strings.Contains(game.LettersUsed, guess) {
@@ -67,38 +67,33 @@ func (game *Hangman) Guess(guess string) {
 		return
 	}
 
-	// Mettre à jour les lettres utilisées
 	game.LettersUsed += guess
-
-	// Mettre à jour l'affichage et les essais restants
 	if !game.updateDisplay([]rune(guess)[0]) {
 		game.TriesLeft--
 	}
-
-	// Vérifier l'état du jeu
 	game.GameOver = game.TriesLeft < 1
 
 	switch game.verif() {
 	case "lose":
-		game.Message = "Dommage, vous avez Perdu!"
+		game.Message = "Dommage, vous avez perdu !"
 		isPlaying = false
 		win = false
 	case "win":
-		game.Message = "Bravo, vous avez Gagné!"
+		game.Message = "Bravo, vous avez gagné !"
 		isPlaying = false
 		win = true
 		game.Gameswon++
 	case "guess again":
-		game.Message = "Essayez encore!"
+		game.Message = "Essayez encore !"
 	}
 }
 
-// isLetter vérifie si le caractère est une lettre.
+// isLetter vérifie si le caractère est une lettre
 func isLetter(c byte) bool {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
-// updateDisplay met à jour l'affichage du mot masqué.
+// updateDisplay met à jour l'affichage du mot en fonction de la lettre devinée
 func (game *Hangman) updateDisplay(char rune) bool {
 	var correct bool
 	arrayDisplay := []rune(game.Display)
@@ -112,7 +107,7 @@ func (game *Hangman) updateDisplay(char rune) bool {
 	return correct
 }
 
-// ReadWords lit les mots à partir d'un fichier.
+// ReadWords lit les mots depuis un fichier spécifié
 func ReadWords(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -131,9 +126,8 @@ func ReadWords(filename string) ([]string, error) {
 	return words, nil
 }
 
-// main est le point d'entrée du programme.
 func main() {
-	// Serve static files from the "static" directory.
+	// Serveur de fichiers statiques depuis le répertoire "static"
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Page d'accueil
@@ -142,17 +136,19 @@ func main() {
 		tmpl.Execute(w, nil)
 	})
 
-	// Initialisation du jeu
+	// Initialiser une nouvelle partie
 	http.HandleFunc("/init", func(w http.ResponseWriter, r *http.Request) {
 		liste := r.FormValue("difficulty")
-		// Charger la liste de mots depuis le fichier
+		// Charger la liste de mots depuis un fichier
 		wordList, err := ReadWords("wordlists/" + liste + ".txt")
 		if err != nil {
 			log.Fatal(err)
 		}
+		// Initialiser une nouvelle partie
 		hangman = NewGame(wordList)
 		isPlaying = true
-		http.Redirect(w, r, "/hangman", 301)
+		// Redirection vers la page du jeu
+		http.Redirect(w, r, "/hangman", http.StatusMovedPermanently)
 	})
 
 	// Page de défaite
@@ -171,18 +167,19 @@ func main() {
 	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.New("index").ParseFiles("templates/index.html"))
 		if !isPlaying {
+			// Redirection vers la page de victoire ou de défaite
 			if win {
-				http.Redirect(w, r, "/win", 301)
+				http.Redirect(w, r, "/win", http.StatusMovedPermanently)
 				return
 			} else {
-				http.Redirect(w, r, "/lose", 301)
+				http.Redirect(w, r, "/lose", http.StatusMovedPermanently)
 				return
 			}
 		}
 		tmpl.Execute(w, hangman)
 	})
 
-	// Gestion de la devinette
+	// Gérer les tentatives du joueur pour deviner une lettre
 	http.HandleFunc("/guess", func(w http.ResponseWriter, r *http.Request) {
 		guess := r.FormValue("letter")
 		if len(guess) != 1 {
@@ -190,12 +187,14 @@ func main() {
 			return
 		}
 
+		// Gérer la tentative du joueur
 		hangman.Guess(guess)
 
+		// Redirection vers la page principale du jeu
 		http.Redirect(w, r, "/hangman", http.StatusSeeOther)
 	})
 
-	// Démarrer le serveur web sur le port 8080
+	// Démarrer le serveur web
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
