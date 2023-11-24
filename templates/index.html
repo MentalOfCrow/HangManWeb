@@ -1,0 +1,23 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman</title>
+    <link rel="stylesheet" href="../static/style.css" type="text/css">
+</head>
+<body class="Page2">
+    <h1>{{.Message}}</h1>
+    <img class= "im" src="../static/images/{{.TriesLeft}}.png" alt="Hangman">
+    <p>Word: {{.Display}}</p>
+    <p>Tries left: {{.TriesLeft}}</p>
+    <p>Letters used: {{.LettersUsed}}</p>
+    <form action="/guess" method="post">
+        <label class="mots" for="letter">Guess a letter:</label>
+        <input type="text" id="letter" name="letter" maxlength="1">
+        <button type="submit">Guess</button>
+    </form>
+</body>
+</html>
+{{end}}
+
+{{template "index" .}}

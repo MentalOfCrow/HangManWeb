@@ -1,0 +1,16 @@
+{{define "lose"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman</title>
+    <link rel="stylesheet" href="../static/style.css" type="text/css">
+</head>
+<body class="PageL">
+    <h1>{{.Message}}</h1>
+    <img class= "im" src="../static/images/{{.TriesLeft}}.png" alt="Lose">
+    <p>You Died</p>
+    <button><a href="difficulty.html">Recommencer</a></button>
+</body>
+</html>
+
+{{end}}
