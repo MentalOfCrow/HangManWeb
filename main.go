@@ -55,6 +55,8 @@ func (game *Hangman) verif() string {
 
 // Guess prend en charge la tentative du joueur pour deviner une lettre
 func (game *Hangman) Guess(guess string) {
+	// Convertie les lettres essayer en majuscules
+	guess = strings.ToUpper(guess)
 	// Vérifier si la lettre a déjà été utilisée
 	if strings.Contains(game.LettersUsed, guess) {
 		game.Message = "Erreur : Lettre déjà utilisée !"
@@ -197,4 +199,3 @@ func main() {
 	// Démarrer le serveur web
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
