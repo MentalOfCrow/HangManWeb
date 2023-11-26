@@ -36,7 +36,7 @@ La Structure du Projet Sur VsCode Sera la suivant :
 └── README.md
 
 Notice Jeu :
-Pour Pouvoir Tester le HangMan Veuillez utilisée Seulement les MAJUSCULES pour les lettres !!!! ( Mises en Place Impossible de Mettre : 0 1 2 3 4 5 6 7 8 9 = Vous pouvez tester....
+Vous pouvez tester avec : 0 1 2 3 4 5 6 7 8 9 = Impossible Normal c'est que des lettres .... 
 
 
 Projet hangman : Vous devez mettre en place une IHM orienter web dans l’objectif de permettre à la majorité des
